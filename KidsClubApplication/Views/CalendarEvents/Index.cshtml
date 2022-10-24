@@ -1,0 +1,105 @@
+﻿@model IEnumerable<KidsClubApplication.Models.CalendarEvent>
+
+@{
+    ViewData["Title"] = "Index";
+
+    int nextMonth, nextYear, prevMonth, prevYear;
+    //next month calculation
+    if(ViewBag.Month + 1 > 12){
+        nextMonth = 1;
+        nextYear = ViewBag.Year + 1;
+    }
+    else{
+        nextMonth = ViewBag.Month + 1;
+        nextYear = ViewBag.Year;
+    }
+    //previous month calculation
+    if (ViewBag.Month - 1 < 1)
+    {
+        prevMonth = 12;
+        prevYear = ViewBag.Year - 1;
+    }
+    else{
+        prevMonth = ViewBag.Month -1;
+        prevYear = ViewBag.Year;
+    }
+
+    string goToNextMonth = "/calendar/" + nextMonth + "-" + nextYear;
+    string goToPrevMonth = "/calendar/" + prevMonth + "-" + prevYear;
+}
+
+
+<h1>Event Calendar</h1>
+<a class="btn btn-primary" asp-controller="CalendarEvents" asp-action="Index" asp-route-month="@nextMonth" asp-route-year="@nextYear">↑</a>
+<a class="btn btn-primary" asp-controller="CalendarEvents" asp-action="Index" asp-route-month="@prevMonth" asp-route-year="@prevYear">↓</a>
+
+<calendar month="@ViewBag.Month" year="@ViewBag.Year" events="@Model.ToList<CalendarEvent>()" />
+
+
+
+
+@*@if (Model.Count > 3){<ul>@foreach(var item in Model){<li>@item.Name</li>}</ul>}*@
+
+@*@{
+    int i = DateTime.Now.Month;
+    int j = DateTime.Now.Year;
+}
+<calendar month="@i" year="@j" events="@Model.ToList<CalendarEvent>()" />
+
+<button type="button" id="btn"
+        onclick="location.href='@Url.Action('ACTION_METHOD_NAME',
+     'CONTROLLER_NAME_WHERE_THE_ACTION_METHOD_RESIDES')'">
+    TEXT YOU WANT TO DISPLAY ON THE BUTTON
+</button>
+
+
+
+<button type="button" onclick="@{
+    i = i
+ }">
+    Test
+</button>*@
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+
